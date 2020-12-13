@@ -10,7 +10,7 @@ try {
         if (error) {
             console.log(error);
         } else {
-    
+
             console.log("Connected to DB");
         }
     });
@@ -19,6 +19,9 @@ try {
 }
 // import router from './src/Crawler'
 // app.use('/', router)
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+})
 app.listen(process.env.port, () => {
     console.log(`Example app listening at http://localhost:${process.env.port}`)
 })
