@@ -1,10 +1,8 @@
 require("dotenv").config();
 const express = require('express')
 const app = express()
-
 const bodyParser = require('body-parser')
 let mongoose = require("mongoose");
-import router from './src/Crawler'
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 try {
@@ -19,7 +17,8 @@ try {
 } catch (error) {
     handleError(error);
 }
-app.use('/', router)
+// import router from './src/Crawler'
+// app.use('/', router)
 app.listen(process.env.port, () => {
     console.log(`Example app listening at http://localhost:${process.env.port}`)
 })
