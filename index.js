@@ -17,8 +17,8 @@ try {
 } catch (error) {
     handleError(error);
 }
-// import router from './src/Crawler'
-// app.use('/', router)
+import router from './src/Crawler'
+app.use('/', router)
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
