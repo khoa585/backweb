@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --experimental-modules --exec babel-node index.js",
-    "start": "nodemon --experimental-modules babel-node index.js"
+    "start": "nodemon --experimental-modules index.js"
   },
   "author": "",
   "license": "ISC",
