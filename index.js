@@ -7,7 +7,8 @@ let cors = require('cors')
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
+import Authencation from './src/common/Authencation'
+import router from './src/Server'
 try {
     mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, (error) => {
         if (error) {
@@ -20,10 +21,10 @@ try {
 } catch (error) {
     handleError(error);
 }
-import router from './src/Server'
-app.use('/a', router)
-app.use('/', (req,res)=>{
-    res.send('hello')
+app.use(Authencation)
+app.use('/api', router)
+app.use('/', (req, res) => {
+    res.send('hello world')
 })
 
 
