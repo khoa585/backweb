@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 let mongoose = require("mongoose");
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
 try {
     mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, (error) => {
         if (error) {
@@ -17,11 +18,11 @@ try {
 } catch (error) {
     handleError(error);
 }
-import router from './src/Crawler'
+import router from './src/Server'
 app.use('/', router)
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+
+
+
 app.listen(process.env.PORT, () => {
     console.log(`Example app listening at http://localhost:${process.env.PORT}`)
 })
