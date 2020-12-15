@@ -3,6 +3,8 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 let mongoose = require("mongoose");
+let cors = require('cors')
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -19,7 +21,10 @@ try {
     handleError(error);
 }
 import router from './src/Server'
-app.use('/', router)
+app.use('/a', router)
+app.use('/', (req,res)=>{
+    res.send('hello')
+})
 
 
 
