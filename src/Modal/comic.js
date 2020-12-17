@@ -21,7 +21,7 @@ let commic = new Schema(
     chapters: [
       {
         type: Schema.Types.ObjectId,
-        // ref: "chapter",
+        ref: "chapter",
       },
     ]
   },

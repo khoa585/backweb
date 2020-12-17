@@ -54,6 +54,13 @@ const getDetialComic = async (url, commicId) => {
     let objects = {};
     let listGenders = [];
     objects["name"] = $("ul.ulpro_line > li:nth-child(1) > .divListtext > .spantile2 > h1").text();
+    let views = $('#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(6) > div.item1').text()
+    if (views === 'Lần đọc') {
+        views = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(6) > div.item2 > span").text();
+    }else{
+        views = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(5) > div.item2 > span").text();
+    }
+    objects["views"] = views
     objects["author"] = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(1) > div.item2 > a").text();
     let status = $("ul.ulpro_line > li:nth-child(1) > .divListtext >ul.ullist_item > li:nth-child(1) > .item1:nth-child(2) > span").text();
     objects["team"] = "Khoa Dưỡng Duy"
@@ -62,12 +69,18 @@ const getDetialComic = async (url, commicId) => {
     } else { objects["status"] = 1; }
     let image = $("ul.ulpro_line > li:nth-child(1) > .divthum2 > a > img").attr("src")
     objects["image"] = image.split(new RegExp(/\?time.*/))[0]
-    let category = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(3) > div.item2 > a")
+    let category = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(3) > div.item1").text()
+    if(category === "Thể loại"){
+        category = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(3) > div.item2 > a")
+    }else{
+        category = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(2) > div.item2 > a")
+    }
     category.each((i, element) => {
         listGenders.push(cheerio.load(element).text())
     })
     objects["genres"] = listGenders;
     objects["description"] = $("ul.ulpro_line > li:nth-child(3) > p:nth-child(2)").text()
+    console.log(objects)
     await commicDb.updateOne({ _id: commicId }, objects);
     let chapterSelect = $("ul.ul_listchap > li");
     chapterSelect.each(function (i, element) {
