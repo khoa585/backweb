@@ -18,6 +18,7 @@ let commic = new Schema(
       },
     ],
     description: String,
+    hot: Number,
     chapters: [
       {
         type: Schema.Types.ObjectId,

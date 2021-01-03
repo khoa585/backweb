@@ -1,25 +1,23 @@
 const request = require("request-promise");
 let cheerio = require("cheerio");
-const URL_PAGE = "https://thichtruyentranh.com/truyen-moi-nhat/trang.";
+const URL_PAGE = "https://khotruyen.net/truyen-yeu-thich?page=";
 let commicDb = require("../Modal/comic");
 let chapterDb = require("../Modal/chapter");
 
 
 const getLinkgetLink = async (page) => {
-    let url = URL_PAGE + page + ".html";
+    let url = URL_PAGE + page;
     let resultData = await request(url);
     let $ = cheerio.load(resultData);
-    let load = $('ul.ulListruyen li');
+    let load = $('#app > div > section > div > div.row.row-sm .col-6.col-sm-3.col-md-3.col-lg-2');
     let listLink = [];
-
     load.each(function (i, element) {
-        let linkCommic1 = cheerio.load(element)("div.divthumb > a:first-child").attr("href")
-
+        let linkCommic1 = cheerio.load(element)(".tile-story a").attr('href')
         if (linkCommic1) {
             listLink.push(linkCommic1);
         }
     })
-    // console.log(listLink)
+
     let listPromise = listLink.map(item => addCommic(item));
     let dataPromise = await Promise.all(listPromise);
 
@@ -28,7 +26,7 @@ const getLinkgetLink = async (page) => {
 
 const addCommic = (Link) => {
     // console.log(Link)
-    return commicDb.create({ url: "https://thichtruyentranh.com/" + Link });
+    return commicDb.create({ url: Link });
 }
 const find_ = () => {
     return commicDb.find({
@@ -53,41 +51,31 @@ const getDetialComic = async (url, commicId) => {
     let listChapter = [];
     let objects = {};
     let listGenders = [];
-    objects["name"] = $("ul.ulpro_line > li:nth-child(1) > .divListtext > .spantile2 > h1").text();
-    let views = $('#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(6) > div.item1').text()
-    if (views === 'Lần đọc') {
-        views = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(6) > div.item2 > span").text();
-    }else{
-        views = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(5) > div.item2 > span").text();
-    }
-    objects["views"] = views
-    objects["author"] = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(1) > div.item2 > a").text();
-    let status = $("ul.ulpro_line > li:nth-child(1) > .divListtext >ul.ullist_item > li:nth-child(1) > .item1:nth-child(2) > span").text();
+    objects["name"] = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.text > h1").text();
+    objects["views"] = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.text > div.txt > div > span:nth-child(4) > span").text();
+    objects["author"] = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.text > div.txt > p:nth-child(2)").text();
+    let status = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.text > div.txt > p:nth-child(1)").text();
     objects["team"] = "Khoa Dưỡng Duy"
-    if (status == "Còn Tiếp") {
+    if (status == "Tình trang: Đang cập nhật") {
         objects["status"] = 0;
     } else { objects["status"] = 1; }
-    let image = $("ul.ulpro_line > li:nth-child(1) > .divthum2 > a > img").attr("src")
-    objects["image"] = image.split(new RegExp(/\?time.*/))[0]
-    let category = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(3) > div.item1").text()
-    if(category === "Thể loại"){
-        category = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(3) > div.item2 > a")
-    }else{
-        category = $("#pagebody_list > div.divleftpage > div:nth-child(1) > div > ul > li:nth-child(1) > div.divListtext > ul > li:nth-child(2) > div.item2 > a")
-    }
+    let image = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.img  img").attr("data-src")
+    objects["image"] = "https://khotruyen.net" + image
+    let category = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.text > ul.list-tag-story.list-orange li")
     category.each((i, element) => {
-        listGenders.push(cheerio.load(element).text())
+        listGenders.push(cheerio.load(element)('a').text())
     })
     objects["genres"] = listGenders;
-    objects["description"] = $("ul.ulpro_line > li:nth-child(3) > p:nth-child(2)").text()
-    console.log(objects)
+    objects["hot"] = Math.floor(Math.random() * 2) + 1
+    objects["description"] = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.text > div.story-detail-info").text()
+
     await commicDb.updateOne({ _id: commicId }, objects);
-    let chapterSelect = $("ul.ul_listchap > li");
+    let chapterSelect = $("#app > div > section > div > div.bg-white > div.list-chapters > div.box-list .chapter-item");
     chapterSelect.each(function (i, element) {
         let object = {};
         let elementDetial = cheerio.load(element);
-        object.url = "https://thichtruyentranh.com/" + elementDetial("a").attr("href");
-        object.name = elementDetial("a").text();
+        object.url = elementDetial(".col-md-10.col-sm-10.col-8 a").attr("href");
+        object.name = elementDetial(".col-md-10.col-sm-10.col-8 a").text();
         if (object.url) {
             listChapter.push(object);
         }
@@ -106,7 +94,12 @@ const AddChapter = async (url, name, index, comic_id) => {
         comic_id: comic_id,
         index: index,
     })
-    return chapterCreate;
+    let commicUpdate = await commicDb.updateOne({ _id: comic_id }, {
+        "$push": {
+            "chapters": chapterCreate._id
+        }
+    })
+    return url;
 }
 
 module.exports = {

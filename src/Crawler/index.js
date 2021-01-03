@@ -26,12 +26,12 @@ try {
 } catch (error) {
     console.log(error);
 }
-client.flushdb( function (err, succeeded) {
-    console.log("Xóa Thành Công :" + succeeded); // will be true if successfull
-});
+// client.flushdb( function (err, succeeded) {
+//     console.log("Xóa Thành Công :" + succeeded); // will be true if successfull
+// });
 
  
-// for (let i = 1; i <= 5; i++) {
+// for (let i = 1; i <= 3; i++) {
 //     let job = queue.create("getLinkCommic", i).attempts(3).save(function (error) {
 //         if (!error) console.log(job.id);
 //         else console.log(error);
@@ -50,16 +50,17 @@ client.flushdb( function (err, succeeded) {
 
 
 
-find_().then((data) => {
-    data.forEach((item) => {
-        let job = queue.create('getDetailCommic', { url: item.url, id: item._id }).save(function (error) {
-            if (!error) console.log(job.id);
-            else console.log(error);
-        });
-    })
-}).catch((error) => {
-    console.log(error)
-})
+// find_().then((data) => {
+//     data.forEach((item) => {
+//         console.log(item)
+//         let job = queue.create('getDetailCommic', { url: item.url, id: item._id }).save(function (error) {
+//             if (!error) console.log(job.id);
+//             else console.log(error);
+//         });
+//     })
+// }).catch((error) => {
+//     console.log(error)
+// })
 queue.process("getDetailCommic",6, function(job,done){
     getDetialComic(job.data.url,job.data.id).then((data)=>{
      console.log(data);
