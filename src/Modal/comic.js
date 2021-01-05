@@ -12,6 +12,8 @@ let commic = new Schema(
     team: String,
     status: Number,
     views: Number,
+    rent: Boolean,
+    price:Number,
     genres: [
       {
         type: String,

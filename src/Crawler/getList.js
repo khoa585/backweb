@@ -68,7 +68,8 @@ const getDetialComic = async (url, commicId) => {
     objects["genres"] = listGenders;
     objects["hot"] = Math.floor(Math.random() * 2) + 1
     objects["description"] = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.text > div.story-detail-info").text()
-
+    objects["rent"]  = true;
+    objects["price"]  = Math.floor(Math.random() * 100) + 50;;
     await commicDb.updateOne({ _id: commicId }, objects);
     let chapterSelect = $("#app > div > section > div > div.bg-white > div.list-chapters > div.box-list .chapter-item");
     chapterSelect.each(function (i, element) {
@@ -80,7 +81,7 @@ const getDetialComic = async (url, commicId) => {
             listChapter.push(object);
         }
     })
-
+    listChapter = listChapter.reverse();
     let listPromise = listChapter.map((item, index) => AddChapter(item.url, item.name, index + 1, commicId));
     let dataResult = await Promise.all(listPromise);
     return { total: listChapter.length, update: dataResult.length };
