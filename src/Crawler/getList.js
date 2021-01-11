@@ -66,10 +66,10 @@ const getDetialComic = async (url, commicId) => {
         listGenders.push(cheerio.load(element)('a').text())
     })
     objects["genres"] = listGenders;
-    objects["hot"] = Math.floor(Math.random() * 2) + 1
     objects["description"] = $("#app > div > section > div > div.bg-white > div.overview-story.d-lg-flex > div.text > div.story-detail-info").text()
-    objects["rent"]  = true;
-    objects["price"]  = Math.floor(Math.random() * 100) + 50;;
+    objects["rent"] = Math.random() < 0.5
+    objects["price"] = Math.floor(Math.random() * 100000) + 50000;
+    objects["hot"] = Math.random() < 0.5
     await commicDb.updateOne({ _id: commicId }, objects);
     let chapterSelect = $("#app > div > section > div > div.bg-white > div.list-chapters > div.box-list .chapter-item");
     chapterSelect.each(function (i, element) {

@@ -31,7 +31,7 @@ try {
 // });
 
  
-// for (let i = 1; i <= 1; i++) {
+// for (let i = 1; i <= 5; i++) {
 //     let job = queue.create("getLinkCommic", i).attempts(3).save(function (error) {
 //         if (!error) console.log(job.id);
 //         else console.log(error);
@@ -52,7 +52,7 @@ try {
 
 // find_().then((data) => {
 //     data.forEach((item) => {
-//      
+     
 //         let job = queue.create('getDetailCommic', { url: item.url, id: item._id }).save(function (error) {
 //             if (!error) console.log(job.id);
 //             else console.log(error);

@@ -6,6 +6,7 @@ let commic = new Schema(
     name: String,
     alternative: String,
     authors: String,
+    hot:Boolean,
     image: {
       type: String,
     },
